@@ -4,8 +4,11 @@ import {
 	deleteDoc,
 	doc,
 	getDocs,
+	limit,
 	onSnapshot,
+	orderBy,
 	query,
+	startAfter,
 	where,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -15,12 +18,16 @@ import { toast } from "react-toastify";
 import Tags from "../components/Tags";
 import MostPopular from "../components/MostPopular";
 import Trending from "../components/Trending";
+import Category from "../components/Category";
 
-const Home = ({ setActive, user }) => {
+const Home = ({ setActive, user, active }) => {
 	const [loading, setLoading] = useState(true);
 	const [blogs, setBlogs] = useState([]);
 	const [tags, setTags] = useState([]);
 	const [trendBlogs, setTrendBlogs] = useState([]);
+	const [totalBlogs, setTotalBlogs] = useState(null);
+	const [hide, setHide] = useState(false);
+	const [lastVisible, setLastVisible] = useState(null);
 
 	const getTrendingBlogs = async () => {
 		const blogRef = collection(db, "blogs");
@@ -46,7 +53,8 @@ const Home = ({ setActive, user }) => {
 				});
 				const uniqueTags = [...new Set(tags)];
 				setTags(uniqueTags);
-				setBlogs(list);
+				// setBlogs(list);
+				setTotalBlogs(list);
 				setLoading(false);
 				setActive("home");
 			},
@@ -60,6 +68,61 @@ const Home = ({ setActive, user }) => {
 			getTrendingBlogs();
 		};
 	}, [setActive]);
+
+	useEffect(() => {
+		getBlogs();
+		setHide(false);
+	}, [active]);
+
+	const getBlogs = async () => {
+		const blogRef = collection(db, "blogs");
+		console.log(blogRef);
+		const firstFour = query(blogRef, orderBy("title"), limit(4));
+		const docSnapshot = await getDocs(firstFour);
+		setBlogs(
+			docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+		);
+		setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
+	};
+
+	console.log("blogs", blogs);
+
+	// khi load more blogs, kiem tra trong docsnapshot xem con blog nao khong. ////
+	// Neu con thi map blog ra de setBlogs va set lai lastVisible (item cuoi cung duoc map ra) //////
+	const updateState = (docSnapshot) => {
+		const isCollectionEmpty = docSnapshot.size === 0;
+		if (!isCollectionEmpty) {
+			const blogsData = docSnapshot.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}));
+			setBlogs((blogs) => [...blogs, ...blogsData]);
+			setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
+			if (docSnapshot.size <= 4){
+				toast.info("No more blog to display");
+				setHide(true);
+			}
+		} else {
+			toast.info("No more blog to display");
+			setHide(true);
+		}
+	};
+
+	// load more blogs tu position la lastVisible
+	const loadMore = async () => {
+		setLoading(true);
+		const blogRef = collection(db, "blogs");
+		const nextFour = query(
+			blogRef,
+			orderBy("title"),
+			limit(4),
+			startAfter(lastVisible)
+		);
+		const docSnapshot = await getDocs(nextFour);
+		updateState(docSnapshot);
+		setLoading(false);
+	};
+
 	if (loading) {
 		return <Spinner />;
 	}
@@ -69,7 +132,9 @@ const Home = ({ setActive, user }) => {
 			try {
 				setLoading(true);
 				await deleteDoc(doc(db, "blogs", id));
-				toast.info("Blog deleted successfully!");
+				toast.success("Blog deleted successfully!");
+				getBlogs()
+				(blogs.length <= 4) ? setHide(false) : setHide(true)
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
@@ -77,6 +142,23 @@ const Home = ({ setActive, user }) => {
 		}
 	};
 
+	// category count
+	const counts = totalBlogs.reduce((prevValue, currentValue) => {
+		let name = currentValue.category;
+		if (!prevValue.hasOwnProperty(name)) {
+			prevValue[name] = 0;
+		}
+		prevValue[name]++;
+		// delete prevValue["undefined"];
+		return prevValue;
+	}, {});
+
+	const categoryCount = Object.keys(counts).map((k) => {
+		return {
+			category: k,
+			count: counts[k],
+		};
+	});
 
 	return (
 		<div>
@@ -90,10 +172,19 @@ const Home = ({ setActive, user }) => {
 								user={user}
 								handleDelete={handleDelete}
 							/>
+							{!hide && (
+								<button
+									className="btn btn-secondary"
+									onClick={loadMore}
+								>
+									Load More
+								</button>
+							)}
 						</div>
 						<div class="col-md-3">
 							<Tags tags={tags} />
 							<MostPopular blogs={blogs} />
+							<Category catgBlogsCount={categoryCount} />
 						</div>
 					</div>
 				</div>

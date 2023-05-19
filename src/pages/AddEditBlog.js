@@ -13,6 +13,8 @@ const initialState = {
 	trending: "no",
 	category: "",
 	description: "",
+	likes: [],
+	comments: [],
 };
 
 const categoryOption = [
@@ -37,7 +39,9 @@ const AddEditBlog = ({ user, setActive }) => {
 
 	useEffect(() => {
 		const uploadFile = () => {
-			const storageRef = ref(storage, file.name);
+			let ext = file.name.split(".").pop()
+			const filename = Date.now() + "." + ext
+			const storageRef = ref(storage, filename);
 			const uploadTask = uploadBytesResumable(storageRef, file);
 
 			uploadTask.on(
@@ -106,6 +110,7 @@ const AddEditBlog = ({ user, setActive }) => {
 	const onCategoryChange = (e) => {
 		setForm({ ...form, category: e.target.value });
 	};
+
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
