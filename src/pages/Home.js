@@ -76,7 +76,6 @@ const Home = ({ setActive, user, active }) => {
 
 	const getBlogs = async () => {
 		const blogRef = collection(db, "blogs");
-		console.log(blogRef);
 		const firstFour = query(blogRef, orderBy("title"), limit(4));
 		const docSnapshot = await getDocs(firstFour);
 		setBlogs(
@@ -85,10 +84,7 @@ const Home = ({ setActive, user, active }) => {
 		setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
 	};
 
-	console.log("blogs", blogs);
 
-	// khi load more blogs, kiem tra trong docsnapshot xem con blog nao khong. ////
-	// Neu con thi map blog ra de setBlogs va set lai lastVisible (item cuoi cung duoc map ra) //////
 	const updateState = (docSnapshot) => {
 		const isCollectionEmpty = docSnapshot.size === 0;
 		if (!isCollectionEmpty) {
@@ -98,10 +94,6 @@ const Home = ({ setActive, user, active }) => {
 			}));
 			setBlogs((blogs) => [...blogs, ...blogsData]);
 			setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
-			if (docSnapshot.size <= 4){
-				toast.info("No more blog to display");
-				setHide(true);
-			}
 		} else {
 			toast.info("No more blog to display");
 			setHide(true);
@@ -133,8 +125,7 @@ const Home = ({ setActive, user, active }) => {
 				setLoading(true);
 				await deleteDoc(doc(db, "blogs", id));
 				toast.success("Blog deleted successfully!");
-				getBlogs()
-				(blogs.length <= 4) ? setHide(false) : setHide(true)
+				getBlogs()(blogs.length <= 4) ? setHide(false) : setHide(true);
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
@@ -167,11 +158,17 @@ const Home = ({ setActive, user, active }) => {
 					<div class="row mx-0">
 						<Trending blogs={trendBlogs} />
 						<div class="col-md-8">
-							<BlogSection
-								blogs={blogs}
-								user={user}
-								handleDelete={handleDelete}
-							/>
+							<div className="blog-heading text-start py-2 mb-4">
+								Daily Blogs
+							</div>
+							{blogs?.map((blog) => (
+								<BlogSection
+									key={blog.id}
+									user={user}
+									handleDelete={handleDelete}
+									{...blog}
+								/>
+							))}
 							{!hide && (
 								<button
 									className="btn btn-secondary"
@@ -182,9 +179,9 @@ const Home = ({ setActive, user, active }) => {
 							)}
 						</div>
 						<div class="col-md-3">
+							<Category catgBlogsCount={categoryCount} />
 							<Tags tags={tags} />
 							<MostPopular blogs={blogs} />
-							<Category catgBlogsCount={categoryCount} />
 						</div>
 					</div>
 				</div>

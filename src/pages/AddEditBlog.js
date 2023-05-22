@@ -24,6 +24,11 @@ const categoryOption = [
 	"Politics",
 	"Sports",
 	"Business",
+	"Life Style",
+	"Travel",
+	"Music",
+	"Social",
+	"Education",
 ];
 
 const AddEditBlog = ({ user, setActive }) => {
@@ -187,9 +192,9 @@ const AddEditBlog = ({ user, setActive }) => {
 									/>
 									<label
 										htmlFor="radioOption"
-										class="form-check-label"
+										class="form-check-label me-5"
 									>
-										Yes&nbsp;
+										&nbsp;Yes
 									</label>
 									<input
 										type="radio"
@@ -203,7 +208,7 @@ const AddEditBlog = ({ user, setActive }) => {
 										htmlFor="radioOption"
 										class="form-check-label"
 									>
-										No
+										&nbsp;No
 									</label>
 								</div>
 							</div>

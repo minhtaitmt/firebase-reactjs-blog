@@ -45,11 +45,12 @@ const Like = ({ handleLike, likes, userId }) => {
             data-bs-toggle="tooltip"
             data-bs-placement="top"
             title="Please Login to like post"
+            style={{fontFamily: "'Raleway', sans-serif;"}}
           >
             <LikeStatus />
           </button>
         ) : (
-          <button type="button" className="btn btn-primary">
+          <button type="button" className="btn btn-primary" style={{fontFamily: "Poppins"}}>
             <LikeStatus />
           </button>
         )}

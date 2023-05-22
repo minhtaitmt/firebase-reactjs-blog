@@ -9,6 +9,9 @@ import About from "./pages/About";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import TagBlogs from "./pages/TagBlogs";
+import CategoryBlogs from "./pages/CategoryBlogs";
+import DailyBlogs from "./pages/DailyBlogs";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Auth from "./pages/Auth";
@@ -49,8 +52,20 @@ function App() {
 			/>
 			<ToastContainer position="top-center" />
 			<Routes>
-				<Route path="/" element={<Home setActive={setActive} user={user} active={active} />} />
-				<Route path="/detail/:id" element={<Detail setActive={setActive} user={user}  />} />
+				<Route
+					path="/"
+					element={
+						<Home
+							setActive={setActive}
+							user={user}
+							active={active}
+						/>
+					}
+				/>
+				<Route
+					path="/detail/:id"
+					element={<Detail setActive={setActive} user={user} />}
+				/>
 				<Route
 					path="/create"
 					element={
@@ -62,11 +77,32 @@ function App() {
 					}
 				/>
 				<Route
+					path="/tag/:tag"
+					element={<TagBlogs setActive={setActive} />}
+				/>
+				<Route
+					path="/category/:category"
+					element={<CategoryBlogs setActive={setActive} />}
+				/>
+				<Route
+					path="/blogs"
+					element={<DailyBlogs setActive={setActive} />}
+				/>
+				<Route
 					path="/update/:id"
-					element={user?.uid ? <AddEditBlog user={user} setActive={setActive}/> : <Navigate to="/" />}
+					element={
+						user?.uid ? (
+							<AddEditBlog user={user} setActive={setActive} />
+						) : (
+							<Navigate to="/" />
+						)
+					}
 				/>
 				<Route path="/about" element={<About />} />
-				<Route path="/auth" element={<Auth setActive={setActive} setUser={setUser}/>} />
+				<Route
+					path="/auth"
+					element={<Auth setActive={setActive} setUser={setUser} />}
+				/>
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</div>

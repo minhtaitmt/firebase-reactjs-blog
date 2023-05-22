@@ -1,4 +1,9 @@
-$yellow: #f5bc04;
+$yellow: #FFA52F;
+$blue: #4a68e2d2;
+
+$primary_1: #CDA274;
+$primary_2: #292F36;
+$primary_3: #F4F0EC;
 
 @mixin border-radius($radius) {
 	-webkit-border-radius: $radius;
@@ -19,13 +24,6 @@ $yellow: #f5bc04;
 		-o-box-shadow: $top $left $blur $color;
 		box-shadow: $top $left $blur $color;
 	}
-}
-
-@mixin clip-path($clip) {
-	-webkit-clip-path: $clip;
-	-moz-clip-path: $clip;
-	-ms-clip-path: $clip;
-	clip-path: $clip;
 }
 
 @mixin transition($transition) {
@@ -54,7 +52,8 @@ $yellow: #f5bc04;
 	padding-right: 20px !important;
 	margin: 0 20px !important;
 	@include transition(0.5s);
-	background: $yellow !important;
+	background: $primary_1 !important;
+	border-radius: 8px;
 	// @include clip-path(polygon(100% 0, 100% 85%, 14% 85%, 0 100%, 0% 60%, 0 0));
 }
 .navbar-light .navbar-nav .nav-link {
@@ -70,7 +69,8 @@ $yellow: #f5bc04;
 
 	&:focus,
 	&:hover {
-		background: $yellow !important;
+		background: $primary_1 !important;
+		border-radius: 8px;
 		color: #fff !important;
 		padding-top: 10px !important;
 		padding-bottom: 10px !important;
@@ -190,7 +190,7 @@ $yellow: #f5bc04;
 	position: relative;
 	top: 0;
 	@include box-shadow(0, 2px, 3px, 1px, rgba(0, 0, 0, 0));
-	@include transition(all 0.5s);
+	@include transition(all 1s);
 }
 
 .blogs-img > img {
@@ -207,7 +207,7 @@ $yellow: #f5bc04;
 	font-size: 17px;
 	color: #222 !important;
 	font-weight: 800;
-	font-family: "Poppins";
+	font-family: 'Raleway', sans-serif;
 	text-decoration: none;
 	display: block;
 }
@@ -215,7 +215,7 @@ $yellow: #f5bc04;
 .category {
 	display: inline-block;
 	position: relative;
-	background-color: #4287f5;
+	background-color: $blue;
 	padding: 4px 8px;
 	color: #fff;
 	text-decoration: none;
@@ -238,7 +238,7 @@ $yellow: #f5bc04;
 	font-size: 15px;
 	color: #222;
 	display: block;
-	font-family: "Poppins";
+	font-family: 'Raleway', sans-serif;
 	text-decoration: none;
 }
 
@@ -260,13 +260,45 @@ $yellow: #f5bc04;
 }
 
 .btn-read {
-	background: #544e66 !important;
+	background: #bf7034db !important;
+	border: none !important;
 	@include border-radius(0!important);
 	color: #fff !important;
+	border-radius: 5px !important;
 	padding: 5px 10px !important;
 	float: left;
 	margin-top: 10px;
 	font-size: 14px;
+}
+
+// Category
+.widget {
+	position: relative;
+    display: block;
+    margin-bottom: 3rem;
+}
+.widget ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.link-widget li {
+    padding: 1.2rem 0.8rem 1.7rem;
+    text-transform: capitalize;
+    line-height: 1;
+    font-weight: 500;
+    position: relative;
+    margin: 0;
+    border-bottom: 1px dashed #dadada;
+}
+
+.link-widget li:last-child {
+    border-bottom: 0 dashed #dadada;
+}
+
+.link-widget li span {
+    position: absolute;
+    right: 0;
 }
 
 // Detail
@@ -347,9 +379,10 @@ $yellow: #f5bc04;
 	text-decoration: none;
 }
 .tag {
-	background: #f1f1f1;
-	padding: 10px 15px;
-	color: #222;
+	background: $primary_3;
+	padding: 5px 15px;
+	border-radius: 5px;
+	color: $primary_2;
 	@include transition(0.5s);
 	margin-right: 8px;
 	margin-top: 5px;
@@ -358,7 +391,7 @@ $yellow: #f5bc04;
 }
 .tag:hover,
 .tag:focus {
-	background: $yellow;
+	background: $primary_1;
 	color: #fff;
 	text-decoration: none;
 }
@@ -503,7 +536,7 @@ $yellow: #f5bc04;
 	position: relative;
 	padding: 1rem .5rem;
 	border: 1px dashed #dadada;
-	margin-top: 20px;
+	margin-top: 80px !important;
 }
 
 .comments-list p {
@@ -585,4 +618,39 @@ $yellow: #f5bc04;
 	overflow-x: hidden;
 	overflow-y: auto;
 	text-align:justify;
+}
+
+// Pagination
+.btn_mange_pagging {
+	background: $primary_3;
+	padding: 5px 20px;
+	color: $primary_2!important;
+	font-weight: 800;
+	margin: 0 10px;
+	cursor: pointer;
+	border: none;
+	border-radius: 8px;
+	@include transition(0.5s);
+}
+
+.btn_mange_pagging:hover, .btn_mange_pagging:focus {
+	background: $primary_1;
+	color: #fff!important;
+	font-weight: 800;
+}
+
+.btn_pagging {
+	background: $primary_3!important;
+	color: $primary_2;
+	padding: 10px 15px!important;
+	font-weight: 800;
+	margin: 0 10px;
+	border-radius: 8px;
+	text-align: center;
+	@include transition(0.5s);
+}
+
+.btn_pagging:hover, .btn_pagging:focus {
+	background: $primary_1 !important;
+	color: #fff;
 }

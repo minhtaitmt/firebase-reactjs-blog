@@ -38,6 +38,19 @@ const Header = ({ active, setActive, user, handleLogout }) => {
 									</li>
 								</Link>
 								<Link
+									to="/blogs"
+									style={{ textDecoration: "none" }}
+								>
+									<li
+										className={`nav-item nav-link ${
+											active === "blogs" ? "active" : ""
+										}`}
+										onClick={() => setActive("blogs")}
+									>
+										Daily Blogs
+									</li>
+								</Link>
+								<Link
 									to="/create"
 									style={{ textDecoration: "none" }}
 								>
@@ -72,11 +85,28 @@ const Header = ({ active, setActive, user, handleLogout }) => {
 												<img
 													src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
 													alt="avatar"
-													style={{width: "30px", height: "30px", borderRadius: "50%", marginTop: "12px"}}
+													style={{
+														width: "30px",
+														height: "30px",
+														borderRadius: "50%",
+														marginTop: "12px",
+													}}
 												/>
 											</div>
-											<p style={{marginTop: "12px", marginLeft: "5px"}}>{user?.displayName}</p>
-											<li class="nav-item nav-link" onClick={handleLogout}>Logout</li>
+											<p
+												style={{
+													marginTop: "12px",
+													marginLeft: "5px",
+												}}
+											>
+												{user?.displayName}
+											</p>
+											<li
+												class="nav-item nav-link"
+												onClick={handleLogout}
+											>
+												Logout
+											</li>
 										</>
 									) : (
 										<Link
